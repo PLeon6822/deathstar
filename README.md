@@ -17,7 +17,7 @@
 
 ## Arquitectura
 
-    < Imagen de arquitectura >
+    ![Imagen de arquitectura](architecture.png)
 
 ## Explicacion
 
