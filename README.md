@@ -17,7 +17,7 @@
 
 ## Arquitectura
 
-    ![Arquitectura](https://github.com/PLeon6822/deathstar/master/architecture.png "Arquitectura")
+    ![Arquitectura](https://raw.githubusercontent.com/PLeon6822/deathstar/master/architecture.png "Arquitectura")
 
 ## Explicacion
 
