@@ -61,7 +61,7 @@ public class GatewayController {
     } else if (b_response >= 1){
       return "The requested position is already requested, under construction or completed\nResponse " + b_response;
     } else if (b_response == -1) {
-      return "There is no hull on which to build a cannon on position " + pos + ", if there are sufficient resources, it will be built";
+      return "There is no hull on which to build a cannon on position " + pos + ", please request a hull or wait for its completion";
     } else {
       return "Insufficient resources, need 1 plasma and 1 titanium.\nCurrent resources:\nPlasma: " + p_response + "\nTitanium: " + t_response;
     }
@@ -69,14 +69,25 @@ public class GatewayController {
 
   @RequestMapping(value = "/build/reinforced_cannon", method = RequestMethod.POST)
   String buildReinforcedCannon(@RequestBody int pos){
-    
-    return "Your request for a reinforced cannon on position " + pos + " was approved.";
+    int t_response = request_controller.request(HOST+RESOURCE_PORT+"/resource/titanium", "GET");
+    int p_response = request_controller.request(HOST+RESOURCE_PORT+"/resource/plasma", "GET");
+    int b_response = request_controller.request(HOST+BUILD_PORT+"/get?structure=cannon&&position="+pos, "GET");
+    if (t_response >= 2*CANNON_COST && p_response >= 2*CANNON_COST && b_response == 0){
+      int response = request_controller.request(HOST+BUILD_PORT+"/build?structure=cannon&reinforced=false&position="+pos, "POST");
+      return "Your request for a reinforced cannon on position " + pos + " was approved.\nResponse: " + response;
+    } else if (b_response >= 1){
+      return "The requested position is already requested, under construction or completed\nResponse " + b_response;
+    } else if (b_response == -1) {
+      return "There is no hull on which to build a cannon on position " + pos + ", please request a hull or wait for its completion";
+    } else {
+      return "Insufficient resources, need 1 plasma and 1 titanium.\nCurrent resources:\nPlasma: " + p_response + "\nTitanium: " + t_response;
+    }
   }
 
   @RequestMapping(value = "/resources", method = RequestMethod.GET)
   String getResources(){
     int t_response = request_controller.request(HOST+RESOURCE_PORT+"/resource/titanium", "GET");
     int p_response = request_controller.request(HOST+RESOURCE_PORT+"/resource/plasma", "GET");
-    return "There are currently these resources:\nPlasma: " + p_response + "\nTitanium: " + t_response;
+    return "The Empire Reserves currently owns these resources:\nPlasma: " + p_response + "\nTitanium: " + t_response;
   }
 }
