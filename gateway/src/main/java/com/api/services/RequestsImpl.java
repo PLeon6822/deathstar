@@ -7,6 +7,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import com.api.services.Requests;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 
 public class RequestsImpl implements Requests{
 
@@ -15,23 +16,24 @@ public class RequestsImpl implements Requests{
    * Handles HTTP connections to provided Host and with provided REST method
    * @param url
    * @param method
-   * @return response from connection, int expected
+   * @return response from connection, JSON expected
    */
-  public int request(String url, String method){
+  public JSONObject request(String url, String method){
     this.connection = null;
-    int response = -1;
+    JSONObject response = new JSONObject();
     try {
       URL con_url = new URL(url);
       this.connection = (HttpURLConnection) con_url.openConnection();
       connection.setRequestMethod(method);
       connection.setDoOutput(false);
 
-      connection.connect();
-
       BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
       String content = in.readLine();
       in.close();
-      response = Integer.parseInt(content);
+
+      JSONParser parser = new JSONParser();
+      Object parsed = parser.parse(content);
+      response = (JSONObject) parsed;
 
     } catch (Exception e) {
       e.printStackTrace();
@@ -43,9 +45,9 @@ public class RequestsImpl implements Requests{
     return response;
   }
 
-  public int request(String url, JSONObject obj, String method){
+  public JSONObject request(String url, JSONObject obj, String method){
     this.connection = null;
-    int response = -1;
+    JSONObject response = new JSONObject();
     try {
       URL con_url = new URL(url);
       this.connection = (HttpURLConnection) con_url.openConnection();
@@ -54,14 +56,17 @@ public class RequestsImpl implements Requests{
       connection.setDoOutput(true);
 
       DataOutputStream out = new DataOutputStream(connection.getOutputStream());
-      out.writeBytes(obj);
+      out.writeBytes(obj.toJSONString());
       out.flush();
       out.close();
 
       BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
       String content = in.readLine();
       in.close();
-      response = Integer.parseInt(content);
+
+      JSONParser parser = new JSONParser();
+      Object parsed = parser.parse(content);
+      response = (JSONObject) parsed;
 
     } catch (Exception e) {
       e.printStackTrace();
