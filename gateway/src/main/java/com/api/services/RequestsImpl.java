@@ -22,7 +22,7 @@ public class RequestsImpl implements Requests{
       URL con_url = new URL(url);
       this.connection = (HttpURLConnection) con_url.openConnection();
       connection.setRequestMethod(method);
-      connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+      connection.setRequestProperty("Content-Type", "application/json");  //TODO: update data sent to be json
       connection.setDoOutput(false);
 
       connection.connect();

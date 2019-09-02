@@ -1,0 +1,39 @@
+swagger: "2.0"
+info:
+  description: Configuration for resource API server
+  version: "1.0.0"
+  title: Resources REST API
+consumes:
+  - "application/json"
+produces:
+  - "application/json"
+
+basePath: "/resources"
+
+paths:
+  /titanium:
+    get:
+      operationId: "titanium.read"
+      tags:
+        - "Titanium"
+      description: "Get the titanium available"
+      responses:
+        200:
+          description: "Successful read titanium available operation"
+          schema:
+            type: "array"
+            items:
+              properties:
+                resource:
+                  type: "string"
+                amount:
+                  type: "int"
+        default:
+          description: "Error payload"
+          schema:
+            type: "object"
+            properties:
+              message:
+                type: "string"
+              code:
+                type: "int"
