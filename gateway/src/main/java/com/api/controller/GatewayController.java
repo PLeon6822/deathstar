@@ -3,6 +3,7 @@ package com.api.controller;
 import org.springframework.web.bind.annotation.*;
 import java.util.concurrent.ThreadLocalRandom;
 import com.api.services.Requests;
+import org.json.simple.JSONObject;
 
 @RestController
 public class GatewayController {
@@ -24,8 +25,10 @@ public class GatewayController {
 
   @RequestMapping(value = "/build/hull", method = RequestMethod.POST)
   String buildHull(@RequestBody int pos){
+    JSONObject obj = new JSONObject();
+    obj.put("position",pos);
     int r_response = request_controller.request(HOST+RESOURCE_PORT+"/resources/titanium", "GET");
-    int b_response = request_controller.request(HOST+BUILD_PORT+"/get?structure=hull&position="+pos, "GET");
+    int b_response = request_controller.request(HOST+BUILD_PORT+"/status/hull/",obj, "GET");
     if (r_response >= HULL_COST && b_response == 0){
       int response = request_controller.request(HOST+BUILD_PORT+"/build?structure=hull&reinforced=false&position="+pos, "POST");
       return "Your request for a regular hull on position " + pos + " was approved.\nResponse: " + response;
@@ -39,7 +42,7 @@ public class GatewayController {
   @RequestMapping(value = "/build/reinforced_hull", method = RequestMethod.POST)
   String buildReinforcedHull(@RequestBody int pos){
     int r_response = request_controller.request(HOST+RESOURCE_PORT+"/resources/titanium", "GET");
-    int b_response = request_controller.request(HOST+BUILD_PORT+"/get?structure=hull&reinforced=true&position="+pos, "GET");
+    int b_response = request_controller.request(HOST+BUILD_PORT+"/status/hull&reinforced=true&position="+pos, "GET");
     if (r_response >= HULL_COST + R_HULL_COST && b_response == 0) {
       int response = request_controller.request(HOST+BUILD_PORT+"/build?structure=hull&reinforced=true&position="+pos, "POST");
       return "Your request for a reinforced hull on position " + pos + " was approved.\nResponse: " + response;
@@ -54,7 +57,7 @@ public class GatewayController {
   String buildCannon(@RequestBody int pos){
     int t_response = request_controller.request(HOST+RESOURCE_PORT+"/resources/titanium", "GET");
     int p_response = request_controller.request(HOST+RESOURCE_PORT+"/resources/plasma", "GET");
-    int b_response = request_controller.request(HOST+BUILD_PORT+"/get?structure=cannon&&position="+pos, "GET");
+    int b_response = request_controller.request(HOST+BUILD_PORT+"/status/cannon&&position="+pos, "GET");
     if (t_response >= CANNON_COST && p_response >= CANNON_COST && b_response == 0){
       int response = request_controller.request(HOST+BUILD_PORT+"/build?structure=cannon&reinforced=false&position="+pos, "POST");
       return "Your request for a regular cannon on position " + pos + " was approved.\nResponse: " + response;
@@ -71,7 +74,7 @@ public class GatewayController {
   String buildReinforcedCannon(@RequestBody int pos){
     int t_response = request_controller.request(HOST+RESOURCE_PORT+"/resources/titanium", "GET");
     int p_response = request_controller.request(HOST+RESOURCE_PORT+"/resources/plasma", "GET");
-    int b_response = request_controller.request(HOST+BUILD_PORT+"/get?structure=cannon&&position="+pos, "GET");
+    int b_response = request_controller.request(HOST+BUILD_PORT+"/status/cannon&&position="+pos, "GET");
     if (t_response >= 2*CANNON_COST && p_response >= 2*CANNON_COST && b_response == 0){
       int response = request_controller.request(HOST+BUILD_PORT+"/build?structure=cannon&reinforced=false&position="+pos, "POST");
       return "Your request for a reinforced cannon on position " + pos + " was approved.\nResponse: " + response;

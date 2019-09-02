@@ -24,11 +24,16 @@ PUT | /resources/plasma | amount | Actualiza en BD la cantidad disponible de pla
 
 Método | Dirección | Parámetros | Acción
 ------ | --------- | ---------- | ------
------- | --------- | ---------- | ------
+GET | /status/hull | position | Lee en BD el estado de construcción de cubierta en la posición indicada
+GET | /status/reinforced_hull | position | Lee en BD el estado de construcción de cubierta acorazada en la posición indicada
+GET | /status/cannon | position | Lee en BD el estado de construcción de cañón en la posición indicada
+GET | /status/reinforced_cannon | position | Lee en BD el estado de construcción de cañón acorazado en la posición indicada
+POST | /build/hull | position | ------
+
 
 ## Arquitectura
 
-![Arquitectura](https://raw.githubusercontent.com/PLeon6822/deathstar/master/architecture.png "Arquitectura")
+![Arquitectura](https://raw.githubusercontent.com/PLeon6822/deathstar/master/images/architecture.png "Arquitectura")
 
 ## Explicación
 

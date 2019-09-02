@@ -1,10 +1,12 @@
 package com.api.services;
 
 import java.io.BufferedReader;
+import java.io.DataOutputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import com.api.services.Requests;
+import org.json.simple.JSONObject;
 
 public class RequestsImpl implements Requests{
 
@@ -22,10 +24,39 @@ public class RequestsImpl implements Requests{
       URL con_url = new URL(url);
       this.connection = (HttpURLConnection) con_url.openConnection();
       connection.setRequestMethod(method);
-      connection.setRequestProperty("Content-Type", "application/json");  //TODO: update data sent to be json
       connection.setDoOutput(false);
 
       connection.connect();
+
+      BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+      String content = in.readLine();
+      in.close();
+      response = Integer.parseInt(content);
+
+    } catch (Exception e) {
+      e.printStackTrace();
+    } finally {
+      if (connection != null){
+        connection.disconnect();
+      }
+    }
+    return response;
+  }
+
+  public int request(String url, JSONObject obj, String method){
+    this.connection = null;
+    int response = -1;
+    try {
+      URL con_url = new URL(url);
+      this.connection = (HttpURLConnection) con_url.openConnection();
+      connection.setRequestMethod(method);
+      connection.setRequestProperty("Content-Type", "application/json");
+      connection.setDoOutput(true);
+
+      DataOutputStream out = new DataOutputStream(connection.getOutputStream());
+      out.writeBytes(obj);
+      out.flush();
+      out.close();
 
       BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
       String content = in.readLine();
